@@ -1,16 +1,18 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import LoginForm from "./LoginForm";
 import { AuthProvider } from "../services/auth";
+import LoginForm from "./LoginForm";
+import "@testing-library/jest-dom";
 
 describe("LoginForm", () => {
   beforeEach(() => {
     localStorage.clear();
+    jest.resetAllMocks();
   });
 
   it("submits and stores token on success", async () => {
-    const mockFetch = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("/auth/login")) {
+    const mockFetch = jest.fn().mockImplementation((url: any) => {
+      if (typeof url === "string" && url.includes("/auth/login")) {
         return Promise.resolve(
           new Response(
             JSON.stringify({
@@ -21,9 +23,14 @@ describe("LoginForm", () => {
           )
         );
       }
-      return Promise.reject(new Error("Unexpected fetch"));
+      return Promise.reject(new Error("Unexpected fetch: " + url));
     });
-    (global as any).fetch = mockFetch;
+
+    const originalFetch = globalThis.fetch;
+    Object.defineProperty(globalThis, "fetch", {
+      value: mockFetch,
+      writable: true,
+    });
 
     render(
       <AuthProvider>
@@ -35,6 +42,12 @@ describe("LoginForm", () => {
 
     await waitFor(() => {
       expect(localStorage.getItem("token")).toBe("mock-token");
+    });
+
+    // restore
+    Object.defineProperty(globalThis, "fetch", {
+      value: originalFetch,
+      writable: true,
     });
   });
 });

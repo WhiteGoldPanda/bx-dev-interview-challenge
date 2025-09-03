@@ -7,10 +7,10 @@ declare global {
 const fromWindow =
   (typeof window !== "undefined" && window.__API_URL__) || undefined;
 
-// In Jest/node these may be undefined – that's fine
+
 const fromEnv =
-  (process.env as any)?.VITE_API_URL ||
-  (process.env as any)?.API_URL ||
+  (process.env as NodeJS.ProcessEnv)?.VITE_API_URL ||
+  (process.env as NodeJS.ProcessEnv)?.API_URL ||
   undefined;
 
 export const API_URL: string =
