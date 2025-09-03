@@ -15,3 +15,9 @@ node_modules
 
 #!.yarn/cache
 .pnp.*
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+.env.example
