@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://bx-dev-interview-challenge-production.up.railway.app/api/$1"
+    }
+  ]
+}
