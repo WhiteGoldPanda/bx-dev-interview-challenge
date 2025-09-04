@@ -1,13 +1,9 @@
-// frontend/rsbuild.config.ts
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 
 export default defineConfig({
   plugins: [pluginReact()],
   source: {
-    entry: {
-      index: "./src/index.tsx",
-    },
     exclude: [
       /\.spec\.(tsx?|jsx?)$/,
       /\.test\.(tsx?|jsx?)$/,
@@ -27,20 +23,6 @@ export default defineConfig({
         target: "http://localhost:3000",
         changeOrigin: true,
       },
-    },
-  },
-  tools: {
-    rspack(config) {
-      // extend rspack config safely
-      config.plugins = [
-        ...(config.plugins || []),
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        new (require("webpack").DefinePlugin)({
-          __API_BASE__: JSON.stringify(
-            process.env.VITE_API_URL || process.env.API_URL || ""
-          ),
-        }),
-      ];
     },
   },
 });
